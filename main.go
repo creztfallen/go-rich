@@ -1,5 +1,7 @@
 package main
 
+import "github.com/creztfallen/go-rich/api"
+
 func main() {
-	println("Hello, World!")
+	api.StartServer()
 }
