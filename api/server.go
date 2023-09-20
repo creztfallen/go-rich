@@ -1,12 +1,15 @@
-package api
+package main
 
 import (
 	"fmt"
-	"github.com/creztfallen/go-rich/api/handlers"
 	"net/http"
+
+	"go-rich/api/handlers"
 )
 
-func StartServer() {
+var messageChannel = make(chan string)
+
+func main() {
 	http.HandleFunc("/latest", handlers.LatestExchangeRateHandler)
 	http.HandleFunc("/historical", handlers.HistoricalExchangeRateHandler)
 

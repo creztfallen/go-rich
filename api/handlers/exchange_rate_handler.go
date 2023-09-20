@@ -10,6 +10,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+var MessageChannel = make(chan []byte)
+
 type ExchangeRateResponse struct {
 	Date  string            `json:"date"`
 	Base  string            `json:"base"`
