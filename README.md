@@ -37,16 +37,15 @@ Create a .env file in the api folder with the following content:
    ```bash
    go run ./workers/worker.go
 
-Start the Server:
+3. **Start the Server**:
 
    ```bash
-
    go run ./api/server.go
-```
+
 Make a GET request to the API at the following URL:
-
-      http://localhost:8080/latest?currency=USD
-
+   ```bash
+   http://localhost:8080/latest?currency=USD
+   ```
 Replace USD with the desired currency.
 
 ## Contributions
