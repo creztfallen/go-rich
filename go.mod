@@ -1,4 +1,4 @@
-module go-rich/pubsub
+module go-rich/workers
 
 go 1.21.1
 
