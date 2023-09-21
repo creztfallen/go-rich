@@ -40,17 +40,13 @@ Crie um arquivo .env na pasta api com o seguinte conteúdo:
     ```bash
       go run ./api/server.go
 
-Faça uma Solicitação de Taxa de Câmbio:
-
 Faça uma solicitação GET para a API na seguinte URL:
-
-bash
 
     http://localhost:8080/latest?currency=USD
 
     Substitua USD pela moeda desejada.
 
-Contribuições
+## Contribuições
 
 Sinta-se à vontade para contribuir para este projeto. Basta abrir uma issue ou enviar um pull request.
 
