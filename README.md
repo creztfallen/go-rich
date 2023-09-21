@@ -1,4 +1,4 @@
-# Go-Rich
+# Go-Rich (Status: Development)
 
 This project is an example of how to use RabbitMQ and Go to process exchange rates.
 
