@@ -21,8 +21,10 @@ O projeto consiste em três partes principais:
 
 Antes de executar o projeto, é necessário criar uma conta gratuita no [CurrencyFreaks](https://currencyfreaks.com/) para ter acesso a uma chave de acesso a API deles.
 
-API_KEY=YOUR_API_KEY
-
+Crie um arquivo .env na pasta api com o seguinte conteúdo:
+```
+   API_KEY=YOUR_API_KEY
+```
 ## Executando o Projeto
 
 1. **Inicie o RabbitMQ**:
@@ -54,6 +56,7 @@ bash
 Contribuições
 
 Sinta-se à vontade para contribuir para este projeto. Basta abrir uma issue ou enviar um pull request.
+
 Licença
 
 Este projeto está licenciado sob a MIT License.
