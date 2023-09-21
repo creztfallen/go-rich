@@ -37,26 +37,23 @@ Create a .env file in the api folder with the following content:
    # Latest RabbitMQ 3.12
    docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
 
-    Start the Worker:
-
-    bash
-
-go run ./workers/worker.go
+2. **Start the Worker**:
+   ```bash
+   go run ./workers/worker.go
 
 Start the Server:
 
-bash
+   ```bash
 
-    go run ./api/server.go
-
+   go run ./api/server.go
+```
 Make a GET request to the API at the following URL:
 
-bash
-
-http://localhost:8080/latest?currency=USD
+      http://localhost:8080/latest?currency=USD
 
 Replace USD with the desired currency.
-Contributions
+
+## Contributions
 
 Feel free to contribute to this project. Just open an issue or send a pull request.
 License
