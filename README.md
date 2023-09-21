@@ -16,6 +16,7 @@ The project consists of three main parts:
 
 - [Go](https://golang.org/dl/)
 - [RabbitMQ](https://www.rabbitmq.com/download.html)
+- [Docker](https://docs.docker.com/engine/install/)
 
 ## Configuration
 
