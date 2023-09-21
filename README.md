@@ -1,7 +1,3 @@
-Certainly! Here's the README documentation converted to English:
-
-markdown
-
 # Go-Rich
 
 This project is an example of how to use RabbitMQ and Go to process exchange rates.
