@@ -29,19 +29,16 @@ Crie um arquivo .env na pasta api com o seguinte conteúdo:
 
 1. **Inicie o RabbitMQ**:
    ```bash
-   # latest RabbitMQ 3.12
-    docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
+      # latest RabbitMQ 3.12
+      docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
 
 3. **Inicie o Worker**:
 
    ```bash
-   
-   go run ./workers/worker.go
+      go run ./workers/worker.go
 4. **Inicie o servidor**:
-
-  ´´´bash
-  
-    go run ./api/server.go
+    ```bash
+      go run ./api/server.go
 
 Faça uma Solicitação de Taxa de Câmbio:
 
