@@ -27,9 +27,7 @@ Before running the project, you need to create a free account at [CurrencyFreaks
 
 Create a .env file in the api folder with the following content:
 
-API_KEY=YOUR_API_KEY
-
-bash
+      API_KEY=YOUR_API_KEY
 
 
 ## Running the Project
