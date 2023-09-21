@@ -52,7 +52,7 @@ func Publish(message models.ExchangeRateMessage) {
 
 	err = ch.PublishWithContext(ctx,
 		"",                 // exchange
-		q.Name, // routing key
+		q.Name, 			// routing key
 		false,              // mandatory
 		false,              // immediate
 		amqpMessage,        // message
@@ -76,7 +76,7 @@ func PublishBack(message models.ExchangeRateResult) {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"api", // name
+		"api", 			  // name
 		true,             // durable
 		false,            // delete when unused
 		false,            // exclusive
@@ -103,7 +103,7 @@ func PublishBack(message models.ExchangeRateResult) {
 
 	err = ch.PublishWithContext(ctx,
 		"",                 // exchange
-		q.Name, // routing key
+		q.Name, 			// routing key
 		false,              // mandatory
 		false,              // immediate
 		amqpMessage,        // message

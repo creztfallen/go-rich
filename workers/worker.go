@@ -20,13 +20,14 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	// Cria um canal
+	defer conn.Close()
+	
 	ch, err := conn.Channel()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
 		"exchange-rates", // name
