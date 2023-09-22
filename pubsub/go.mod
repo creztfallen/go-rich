@@ -1,4 +1,4 @@
-module go-rich/publishers
+module go-rich/pubsub
 
 go 1.21.1
 
