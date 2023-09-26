@@ -2,21 +2,30 @@ package main
 
 import (
 	"encoding/json"
-
-	"go-rich/models"
-	"go-rich/pubsub/utils"
-
+	"fmt"
 	"log"
 	"net/http"
+
+	"go-rich/models"
+	mb "go-rich/pubsub/message_broker"
 )
 
 var result models.ExchangeRateResult
 
 func main() {
 
-	msgs, ch := utils.Consumer("amqp://localhost:5672", "exchange_rates")
+	rabbitmq, err := mb.NewRabbitMQ("amqp://localhost:5672")
+	if err != nil {
+		panic(err)
+	}
 
-	defer ch.Close()
+	// msgs, ch := utils.Consume("amqp://localhost:5672", "exchange_rates")
+
+	msgs, err := rabbitmq.ReceiveMessage("exchange_rates")
+	if err != nil {
+		panic(err)
+	}
+
 	var forever chan struct{}
 
 	go func() {
@@ -44,8 +53,10 @@ func main() {
 				Rate: exchangeRateResponse.Rates[message.Currency],
 			}
 
-			utils.Publish(result, "amqp://localhost:5672", "api")
+			fmt.Println("RESULT",result)
 
+			rabbitmq.SendMessage(result, "api")
+			d.Ack(false)
 		}
 	}()
 	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")

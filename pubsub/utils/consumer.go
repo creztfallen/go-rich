@@ -4,13 +4,13 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func Consumer(connectionString, queueName string) (<-chan amqp.Delivery, *amqp.Channel) {
+func Consume(connectionString, queueName string) (<-chan amqp.Delivery, *amqp.Channel) {
 
 	q, ch := BrokerConfig(connectionString, queueName)
 
 	DeclareQos(ch, 1, 0, false)
 
-	msgs:= Consume(ch, q)
+	msgs:= Consumer(ch, q)
 
 	return msgs, ch
 }
@@ -26,7 +26,7 @@ func DeclareQos(ch *amqp.Channel, prefetchCount, prefetchSize int, global bool) 
 	}
 }
 
-func Consume(ch *amqp.Channel, q amqp.Queue) <- chan amqp.Delivery{
+func Consumer(ch *amqp.Channel, q amqp.Queue) <- chan amqp.Delivery{
 	msgs, err := ch.Consume(
 		q.Name,
 		"",    // consumer
