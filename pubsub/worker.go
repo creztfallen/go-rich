@@ -12,6 +12,8 @@ import (
 
 	"go-rich/models"
 	mb "go-rich/pubsub/message_broker"
+
+	"github.com/joho/godotenv"
 )
 
 var result models.ExchangeRateResult
@@ -19,7 +21,13 @@ var exchangeRateResponse models.ExchangeRateResponse
 var message models.ExchangeRateMessage
 
 func main() {
-	rabbitmq, err := mb.NewRabbitMQ("amqp://localhost:5672")
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error loading .env file %v", err)
+	}
+
+	connection_uri := os.Getenv("CONNECTION_URI")
+	rabbitmq, err := mb.NewRabbitMQ(connection_uri)
 	if err != nil {
 		panic(err)
 	}
