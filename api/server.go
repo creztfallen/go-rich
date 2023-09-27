@@ -6,7 +6,9 @@ import (
 	"go-rich/api/handlers"
 )
 
+
 func main() {
+	
 	http.HandleFunc("/latest", handlers.LatestExchangeRateHandler)
 	http.HandleFunc("/latests", handlers.LatestExchangeRatesHandler)
 

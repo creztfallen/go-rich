@@ -4,60 +4,75 @@ import (
 	"encoding/json"
 	"fmt"
 	"go-rich/models"
-	"go-rich/pubsub/utils"
+	mb "go-rich/pubsub/message_broker"
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
 )
 
 func LatestExchangeRateHandler(w http.ResponseWriter, r *http.Request) {
-	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading .env file %v", err)
+
+	rabbitmq, err := mb.NewRabbitMQ("amqp://localhost:5672")
+	if err != nil {
+		panic(err)
 	}
+	defer rabbitmq.Close()
 
-	apiKey := os.Getenv("API_KEY")
-	currency := r.URL.Query().Get("currency")
-	apiEndpoint := fmt.Sprintf("https://api.currencyfreaks.com/latest?apikey=%s", apiKey)
 
-	message := models.ExchangeRateMessage{
-		Currency: currency,
-		Url:      apiEndpoint,
-	}
-
-	utils.Publish(message, "amqp://localhost:5672", "exchange_rates")
-
-	msgs, ch := utils.Consumer("amqp://localhost:5672", "api")
-	defer ch.Close()
-
-	var result models.ExchangeRateResult
-
-	go func() {
-		for d := range msgs {
-			err := json.Unmarshal(d.Body, &result)
-			if err != nil {
-				panic(err)
-			}
+		if err := godotenv.Load(); err != nil {
+			log.Fatalf("Error loading .env file %v", err)
 		}
-	}()
 
-	time.Sleep(2 * time.Second)
+		apiUrl := os.Getenv("API_URL")
+		currency := r.URL.Query().Get("currency")
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
-}
+		message := models.ExchangeRateMessage{
+			Currency: currency,
+			Url:      apiUrl,
+		}
+
+		rabbitmq.SendMessage(message, "exchange_rates")
+
+		msgs, err := rabbitmq.ReceiveMessage("api")
+		if err != nil {
+			panic(err)
+		}
+
+		defer rabbitmq.Close()
+
+		var result models.ExchangeRateResult
+		var resultCh = make(chan models.ExchangeRateResult)
+
+		go func() {
+			for d := range msgs {
+				err := json.Unmarshal(d.Body, &result)
+				if err != nil {
+					panic(err)
+				}
+				resultCh <- result
+				fmt.Println("RESULT1", result)
+			}
+			close(resultCh)
+		}()
+
+		result = <-resultCh
+		fmt.Println("RESULT2", result)
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(result)
+	}
+
 
 func LatestExchangeRatesHandler(w http.ResponseWriter, r *http.Request) {
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Error loading .env file %v", err)
 	}
 
-	apiKey := os.Getenv("API_KEY")
-	apiEndpoint := fmt.Sprintf("https://api.currencyfreaks.com/latest?apikey=%s", apiKey)
+	apiUrl := os.Getenv("API_URL")
 
-	response, err := http.Get(apiEndpoint)
+	response, err := http.Get(apiUrl)
 	if err != nil {
 		panic(err)
 	}
