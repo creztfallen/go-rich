@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -44,22 +43,17 @@ func LatestExchangeRateHandler(rabbitmq mb.MessageQueue) http.HandlerFunc {
 				if err != nil {
 					panic(err)
 				}
-				d.Ack(false)
 				resultCh <- result
 				fmt.Println("RESULT1", result)
 			}
+			close(resultCh)
 		}()
-	
 
-		select {
-		case <-time.After(5 * time.Second):
-			w.WriteHeader(http.StatusRequestTimeout)
-			w.Write([]byte("Timeout waiting for result."))
-		case result := <-resultCh:
-			fmt.Println("RESULT2", result)
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(result)
-		}
+		result = <-resultCh
+		fmt.Println("RESULT2", result)
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(result)
 	}
 }
 

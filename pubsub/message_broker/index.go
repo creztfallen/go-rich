@@ -12,7 +12,10 @@ type MessageQueue interface {
 type RabbitMQ struct {
 	conn *amqp.Connection
 	ch *amqp.Channel
+	CleanUp func()
 }
+
+
 
 func NewRabbitMQ(url string) (*RabbitMQ, error) {
 	conn, err := amqp.Dial(url)
@@ -30,5 +33,11 @@ func NewRabbitMQ(url string) (*RabbitMQ, error) {
 		ch: ch,
 	}
 
+	rabbitmqInstance.CleanUp = func() {
+		ch.Close()
+		conn.Close()
+	}
+
 	return rabbitmqInstance, nil
 }
+

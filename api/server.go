@@ -13,8 +13,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer rabbitmq.Close()
 
-	http.HandleFunc("/latest", handlers.LatestExchangeRateHandler(*rabbitmq))
+	http.HandleFunc("/latest", handlers.LatestExchangeRateHandler(rabbitmq))
 	http.HandleFunc("/latests", handlers.LatestExchangeRatesHandler)
 
 	port := "8080"

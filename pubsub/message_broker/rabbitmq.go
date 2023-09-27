@@ -8,7 +8,7 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func (r RabbitMQ) SendMessage(message interface{}, queueName string) error {
+func (r *RabbitMQ) SendMessage(message interface{}, queueName string) error {
 	_, err := r.ch.QueueDeclare(
 		queueName, // name
 		true,      // durable
@@ -42,7 +42,7 @@ func (r RabbitMQ) SendMessage(message interface{}, queueName string) error {
 	return err
 }
 
-func (r RabbitMQ) ReceiveMessage(queueName string) (<- chan amqp.Delivery, error) {
+func (r *RabbitMQ) ReceiveMessage(queueName string) (<- chan amqp.Delivery, error) {
 	_, err := r.ch.QueueDeclare(
 		queueName, // name
 		true,      // durable
@@ -58,7 +58,7 @@ func (r RabbitMQ) ReceiveMessage(queueName string) (<- chan amqp.Delivery, error
 	msgs, err := r.ch.Consume(
 		queueName, // queue
 		"",        // consumer
-		false,      // auto-ack
+		true,      // auto-ack
 		false,     // exclusive
 		false,     // no-local
 		false,     // no-wait
@@ -70,4 +70,8 @@ func (r RabbitMQ) ReceiveMessage(queueName string) (<- chan amqp.Delivery, error
 
 
 	return msgs, nil
+}
+
+func (r *RabbitMQ) Close() {
+	r.CleanUp()
 }
