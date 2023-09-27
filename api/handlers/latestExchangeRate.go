@@ -12,8 +12,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func LatestExchangeRateHandler(rabbitmq mb.MessageQueue) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func LatestExchangeRateHandler(w http.ResponseWriter, r *http.Request) {
+
+	rabbitmq, err := mb.NewRabbitMQ("amqp://localhost:5672")
+	if err != nil {
+		panic(err)
+	}
+	defer rabbitmq.Close()
+
 
 		if err := godotenv.Load(); err != nil {
 			log.Fatalf("Error loading .env file %v", err)
@@ -33,6 +39,8 @@ func LatestExchangeRateHandler(rabbitmq mb.MessageQueue) http.HandlerFunc {
 		if err != nil {
 			panic(err)
 		}
+
+		defer rabbitmq.Close()
 
 		var result models.ExchangeRateResult
 		var resultCh = make(chan models.ExchangeRateResult)
@@ -55,7 +63,7 @@ func LatestExchangeRateHandler(rabbitmq mb.MessageQueue) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(result)
 	}
-}
+
 
 func LatestExchangeRatesHandler(w http.ResponseWriter, r *http.Request) {
 	if err := godotenv.Load(); err != nil {

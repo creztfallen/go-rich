@@ -7,6 +7,7 @@ import (
 type MessageQueue interface {
     SendMessage(message interface{}, queueName string) error
     ReceiveMessage(queueName string) (<- chan amqp.Delivery, error)
+	Close()
 }
 
 type RabbitMQ struct {
@@ -35,7 +36,6 @@ func NewRabbitMQ(url string) (*RabbitMQ, error) {
 
 	rabbitmqInstance.CleanUp = func() {
 		ch.Close()
-		conn.Close()
 	}
 
 	return rabbitmqInstance, nil
