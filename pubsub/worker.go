@@ -27,7 +27,7 @@ func main() {
 	}
 
 	connection_uri := os.Getenv("CONNECTION_URI")
-	rabbitmq, err := mb.NewRabbitMQ(connection_uri)
+	messageBroker, err := mb.NewRabbitMQ(connection_uri)
 	if err != nil {
 		panic(err)
 	}
@@ -35,19 +35,19 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	msgs, err := rabbitmq.ReceiveMessage("exchange_rates")
+	msgs, err := messageBroker.ReceiveMessage("exchange_rates")
 	if err != nil {
 		panic(err)
 	}
 
-	amqpDelivery := mb.ConvertToAMQPDeliveryChan(msgs)
+	delivery := mb.ConvertToAMQPDeliveryChan(msgs)
 
 	go func() {
 		for {
 			select {
 			case <-ctx.Done():
 				return
-			case d, ok := <-amqpDelivery:
+			case d, ok := <-delivery:
 				if !ok {
 					return
 				}
@@ -80,7 +80,7 @@ func main() {
 
 					fmt.Println("RESULT", result)
 
-					err = rabbitmq.SendMessage(result, "api")
+					err = messageBroker.SendMessage(result, "api")
 					if err != nil {
 						log.Printf("Error sending message: %s", err)
 					}
