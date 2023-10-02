@@ -8,9 +8,9 @@ The project consists of three main parts:
 
 1. **Server (API)**: A Go API that receives requests to fetch exchange rates.
 
-2. **Sender (Sender)**: Sends exchange rate requests to a RabbitMQ server.
+2. **Sender (Sender)**: Sends exchange rate responses to a message broker.
 
-3. **Worker (Worker)**: A Go worker that consumes messages from RabbitMQ, fetches exchange rates, and sends the results back to the API.
+3. **Worker (Worker)**: A Go worker that consumes messages from a message broker, fetches exchange rates, and sends the results back to the API.
 
 ## Requirements
 
