@@ -15,7 +15,7 @@ The project consists of three main parts:
 ## Requirements
 
 - [Go](https://golang.org/dl/)
-- [RabbitMQ](https://www.rabbitmq.com/download.html)
+- [RabbitMQ](https://www.rabbitmq.com/download.html) / [Amazon SQS](https://aws.amazon.com/pt/sqs/)
 - [Docker](https://docs.docker.com/engine/install/)
 
 ## Configuration
@@ -29,7 +29,7 @@ Create a .env file in the api folder with the following content:
 
 ## Running the Project
 
-1. **Start RabbitMQ**:
+1. **Start RabbitMQ (In case you're using it over AmazonSQS)**:
    ```bash
    # Latest RabbitMQ 3.12
    docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
