@@ -40,13 +40,15 @@ func LatestExchangeRateHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	amqpDelivery := mb.ConvertToAMQPDeliveryChan(msgs)
+
 	defer rabbitmq.Close()
 
 	var result models.ExchangeRateResult
 	var resultCh = make(chan models.ExchangeRateResult)
 
 	go func() {
-		for d := range msgs {
+		for d := range amqpDelivery {
 			err := json.Unmarshal(d.Body, &result)
 			if err != nil {
 				panic(err)

@@ -42,7 +42,7 @@ func (r *RabbitMQ) SendMessage(message interface{}, queueName string) error {
 	return err
 }
 
-func (r *RabbitMQ) ReceiveMessage(queueName string) (<- chan amqp.Delivery, error) {
+func (r *RabbitMQ) ReceiveMessage(queueName string) (<- chan interface{}, error) {
 	_, err := r.ch.QueueDeclare(
 		queueName, // name
 		true,      // durable
@@ -68,10 +68,13 @@ func (r *RabbitMQ) ReceiveMessage(queueName string) (<- chan amqp.Delivery, erro
 		return nil, err
 	}
 
+	interfaceMsgs:= ConvertToInterfaceChan(msgs)
 
-	return msgs, nil
+
+	return interfaceMsgs, nil
 }
 
 func (r *RabbitMQ) Close() {
 	r.CleanUp()
 }
+

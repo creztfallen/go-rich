@@ -40,12 +40,14 @@ func main() {
 		panic(err)
 	}
 
+	amqpDelivery := mb.ConvertToAMQPDeliveryChan(msgs)
+
 	go func() {
 		for {
 			select {
 			case <-ctx.Done():
 				return
-			case d, ok := <-msgs:
+			case d, ok := <-amqpDelivery:
 				if !ok {
 					return
 				}
